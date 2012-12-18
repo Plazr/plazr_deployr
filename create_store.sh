@@ -7,35 +7,21 @@
 
 # Arguments:
 # $1 -> the store name
-# $2 -> the repository ssh address
+# $2 -> the store id
 # $3 -> the custom domain, if wanted 
 
-# Renames the directory if it already exists
-if [ -d "$1" ]
-then
-	i=1
-	while true
-	do
-		NEW_DIR=$1"_"$i
-		if [ ! -d "$NEW_DIR" ]
-		then 
-			echo "$1 already exists. The folder will be renamed to $NEW_DIR"
-			break
-		fi
-		i=$((i+1))
-	done
-else
-	NEW_DIR=$1
-fi
-
+# The store directory
+STORE_NAME=$2"_"$1
+DIR="../plazr_stores/"$STORE_NAME
 NUM_DYNOS=1
-LOG_FILE=$NEW_DIR"_log.txt"
+LOG_FILE="../plazr_stores/"$DIR"/log.txt"
+DEFAULT_REPO="git@github.com:Plazr/plazr_store_template.git"
 
 echo "Progress log can be checked in $LOG_FILE"
 
-git clone $2 $NEW_DIR > $LOG_FILE
+git clone $DEFAULT_REPO $DIR > $LOG_FILE
 
-cd $NEW_DIR
+cd $DIR
 
 # App creation on Heroku
 # Missing app name availability check
@@ -48,12 +34,12 @@ git push heroku master > $LOG_FILE
 heroku ps:scale web=$NUM_DYNOS > $LOG_FILE
 
 # Adding a custom domain
-# Assumes that the subdomain was already created in gandi.net
-
+# Create subdomain on Gandi.net and associates it to heroku
 if [ ! -z "$3" ]
     then
 		heroku domains:add $3 > $LOG_FILE
     else
+		
 		heroku domains:add "www.plazr.net/"$1 > $LOG_FILE
 fi
 
