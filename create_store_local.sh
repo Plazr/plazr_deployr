@@ -38,7 +38,7 @@ export BUNDLE_GEMFILE=$PWD"/Gemfile"
 #rake plazr_auth:install:migrations 
 #rake plazr_store:install:migrations 
 #rake db:migrate
-#rake db:seed
+rake store:create_yml[$2,$1]
 
 rails server -d -e production -p $PORT
 
