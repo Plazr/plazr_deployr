@@ -39,7 +39,7 @@ export BUNDLE_GEMFILE=$PWD"/Gemfile"
 #rake plazr_store:install:migrations 
 #rake db:migrate
 rake store:create_yml[$2,$1]
-#rake add_banner_and_logo
+rake add_banner_and_logo
 rails server -d -e production -p $PORT
 
 echo
